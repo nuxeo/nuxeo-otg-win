@@ -5,5 +5,7 @@ syntax:blob
 *.suo
 *.user
 /TestResults
+*.testsettings
 *.vspscc
 *.vssscc
+*.vsmdi
