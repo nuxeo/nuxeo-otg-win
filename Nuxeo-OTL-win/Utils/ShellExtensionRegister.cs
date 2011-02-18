@@ -8,7 +8,8 @@ namespace Nuxeo.Otg.Win
 {
     internal class ShellExtensionRegister
     {
-        protected const String CONTEXTMENU_KEY = @"*\shellex\ContextMenuHandlers\{0}";
+        protected const String CONTEXTMENU_FILE_KEY = @"*\shellex\ContextMenuHandlers\{0}";
+        protected const String CONTEXTMENU_FOLDER_KEY = @"Folder\shellex\ContextMenuHandlers\{0}";
         protected const String APPROVED_KEY = @"Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved";
 
         /// <summary>
@@ -49,7 +50,6 @@ namespace Nuxeo.Otg.Win
                 throw new ArgumentException("clsid must not be empty");
             }
 
-            // Create the key HKCR\<File Type>\shellex\<ShellExtHandler>\{<CLSID>}.
             string keyName = @"Software\Microsoft\Windows\CurrentVersion\Explorer\ShellIconOverlayIdentifiers\1NuxeoOtg";
             using (RegistryKey key = Registry.LocalMachine.CreateSubKey(keyName))
             {
@@ -85,7 +85,14 @@ namespace Nuxeo.Otg.Win
                 throw new ArgumentException("friendlyName must not be null or empty");
             }
 
-            string keyName = string.Format(CONTEXTMENU_KEY, friendlyName);
+            // Register for * file
+            string keyName = string.Format(CONTEXTMENU_FILE_KEY, friendlyName);
+            using (RegistryKey key = Registry.ClassesRoot.CreateSubKey(keyName))
+            {
+                if (key != null) { key.SetValue(null, clsid.ToString("B")); }
+            }
+            // Register for folder
+            keyName = string.Format(CONTEXTMENU_FOLDER_KEY, friendlyName);
             using (RegistryKey key = Registry.ClassesRoot.CreateSubKey(keyName))
             {
                 if (key != null) { key.SetValue(null, clsid.ToString("B")); }
@@ -102,7 +109,11 @@ namespace Nuxeo.Otg.Win
         {
             if (clsid == Guid.Empty) { throw new ArgumentException("clsid must not be null"); }
 
-            string keyName = string.Format(CONTEXTMENU_KEY, friendlyName);
+            // Unregister for * file
+            string keyName = string.Format(CONTEXTMENU_FILE_KEY, friendlyName);
+            Registry.ClassesRoot.DeleteSubKeyTree(keyName, false);
+            // Unregister for Folder file
+            keyName = string.Format(CONTEXTMENU_FOLDER_KEY, friendlyName);
             Registry.ClassesRoot.DeleteSubKeyTree(keyName, false);
             RemoveApprochedShellExtension(clsid);
         }

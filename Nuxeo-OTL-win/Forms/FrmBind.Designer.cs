@@ -33,7 +33,7 @@
             this.tbxUrl = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tbxUsername = new System.Windows.Forms.TextBox();
-            this.tbxPassword = new System.Windows.Forms.MaskedTextBox();
+            this.tbxPassword = new System.Windows.Forms.TextBox();
             this.btnBind = new System.Windows.Forms.Button();
             this.tbxRemote = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -93,6 +93,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tbxPassword.Location = new System.Drawing.Point(12, 117);
             this.tbxPassword.Name = "tbxPassword";
+            this.tbxPassword.PasswordChar = '*';
             this.tbxPassword.Size = new System.Drawing.Size(430, 20);
             this.tbxPassword.TabIndex = 5;
             this.tbxPassword.Text = "Administrator";
@@ -112,7 +113,6 @@
             // 
             this.tbxRemote.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbxRemote.Enabled = false;
             this.tbxRemote.Location = new System.Drawing.Point(12, 179);
             this.tbxRemote.Name = "tbxRemote";
             this.tbxRemote.Size = new System.Drawing.Size(430, 20);
@@ -170,7 +170,7 @@
         private System.Windows.Forms.TextBox tbxUrl;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tbxUsername;
-        private System.Windows.Forms.MaskedTextBox tbxPassword;
+        private System.Windows.Forms.TextBox tbxPassword;
         private System.Windows.Forms.Button btnBind;
         private System.Windows.Forms.TextBox tbxRemote;
         private System.Windows.Forms.Label label4;

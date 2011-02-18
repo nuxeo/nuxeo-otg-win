@@ -71,6 +71,7 @@ namespace Nuxeo.Otg.Win
                     }
                     break;
                 default:
+                    System.Windows.Forms.MessageBox.Show("Action pressed : " + action + " on file :" + fileName);
                     break;
             }
         }

@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Collections.Generic;
 using System.Collections;
+using System.IO;
 
 namespace Nuxeo.Otg.Win
 {
@@ -97,17 +98,6 @@ namespace Nuxeo.Otg.Win
             }
         }
 
-        protected String getFileName(IntPtr hDrop, uint iFile)
-        {
-            StringBuilder fileName = new StringBuilder(260);
-            if (0 == Import.DragQueryFile(hDrop, iFile, fileName,
-                fileName.Capacity))
-            {
-                Marshal.ThrowExceptionForHR(ErrorCode.E_FAIL);
-            }
-            return fileName.ToString();
-        }
-
         #endregion
 
         #region IContextMenu Members
@@ -128,8 +118,16 @@ namespace Nuxeo.Otg.Win
 
                 IntPtr subMenu = Import.CreatePopupMenu();
 
-                // hard-coded status
+                // XXX hard-coded status
                 String state = Constants.STATE_UNATTACHED;
+                if (selectedFiles.Count == 1 && Directory.Exists(selectedFiles[0])) {
+                    // Do not display contextual menu on drive root.
+                    if (selectedFiles[0].EndsWith(@"\"))
+                    {
+                        return ErrorCode.S_FALSE;
+                    }
+                    state = Constants.STATE_DIRECTORY;
+                }
 
                 // Add state and a separator to the OTG SubMenu
                 MenuItemFactory.AddStateMenuItem(subMenu, state, 0);
@@ -173,7 +171,8 @@ namespace Nuxeo.Otg.Win
             CMINVOKECOMMANDINFO ici = (CMINVOKECOMMANDINFO)Marshal.PtrToStructure(
                 pici, typeof(CMINVOKECOMMANDINFO));
             int index = Import.LowWord(ici.verb.ToInt32());
-            System.Windows.Forms.MessageBox.Show("Action pressed : " + currentActionDispacher.CurrentActions[index]);
+            String action = currentActionDispacher.CurrentActions[index];
+            currentActionDispacher.ExecuteAction(action, selectedFiles[0]);
         }
 
         public void GetCommandString(
@@ -200,5 +199,16 @@ namespace Nuxeo.Otg.Win
         }
 
         #endregion
+
+        protected String getFileName(IntPtr hDrop, uint iFile)
+        {
+            StringBuilder fileName = new StringBuilder(260);
+            if (0 == Import.DragQueryFile(hDrop, iFile, fileName,
+                fileName.Capacity))
+            {
+                Marshal.ThrowExceptionForHR(ErrorCode.E_FAIL);
+            }
+            return fileName.ToString();
+        }
     }
 }
