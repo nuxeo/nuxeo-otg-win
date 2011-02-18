@@ -7,7 +7,7 @@ namespace Nuxeo.Otg.Win
 {
     public class ActionsDispatcher
     {
-        protected static Dictionary<String, List<String>> actionsByStates = 
+        protected static Dictionary<String, List<String>> actionsByStates =
             new Dictionary<String, List<String>>();
 
         protected String state;
@@ -43,12 +43,42 @@ namespace Nuxeo.Otg.Win
             this.state = state;
         }
 
-        public List<String> Actions
+        /// <summary>
+        /// Current Actions property
+        /// </summary>
+        public List<String> CurrentActions
         {
             get
             {
                 return actionsByStates[state];
             }
+        }
+
+        /// <summary>
+        /// Execute the specified action
+        /// </summary>
+        /// <param name="action"></param>
+        public void ExecuteAction(String action, String fileName)
+        {
+            switch (action)
+            {
+                case Constants.ACTION_BIND:
+                    Forms.FrmBind frm = new Forms.FrmBind();
+                    if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        CallClientExe(Constants.ACTION_BIND, fileName,
+                            frm.RemoteFolder, frm.Url, frm.Username, frm.Password);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        protected void CallClientExe(String action, params String[] args)
+        {
+            System.Windows.Forms.MessageBox.Show("Action : " + action + 
+                " with params : " + args.ToString());
         }
     }
 }

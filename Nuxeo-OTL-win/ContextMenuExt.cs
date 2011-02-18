@@ -110,7 +110,6 @@ namespace Nuxeo.Otg.Win
 
         #endregion
 
-
         #region IContextMenu Members
 
         public int QueryContextMenu(
@@ -137,7 +136,7 @@ namespace Nuxeo.Otg.Win
                 MenuItemFactory.AddSeparator(subMenu, 1);
 
                 currentActionDispacher = new ActionsDispatcher(state);
-                List<String> actions = currentActionDispacher.Actions;
+                List<String> actions = currentActionDispacher.CurrentActions;
                 // So dirty ... but it's quick for now :D
                 for (uint i = 2; (i - 2) < actions.Count; i++)
                 {
@@ -174,7 +173,7 @@ namespace Nuxeo.Otg.Win
             CMINVOKECOMMANDINFO ici = (CMINVOKECOMMANDINFO)Marshal.PtrToStructure(
                 pici, typeof(CMINVOKECOMMANDINFO));
             int index = Import.LowWord(ici.verb.ToInt32());
-            System.Windows.Forms.MessageBox.Show("Action pressed : " + currentActionDispacher.Actions[index]);
+            System.Windows.Forms.MessageBox.Show("Action pressed : " + currentActionDispacher.CurrentActions[index]);
         }
 
         public void GetCommandString(
@@ -185,7 +184,7 @@ namespace Nuxeo.Otg.Win
             uint cchMax)
         {
             int index = Convert.ToInt32(idCmd.ToUInt32());
-            String[] texts = Constants.getLabels(currentActionDispacher.Actions[index]);
+            String[] texts = Constants.getLabels(currentActionDispacher.CurrentActions[index]);
             // To change
             switch ((GCS)uFlags)
             {
